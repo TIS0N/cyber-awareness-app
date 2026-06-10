@@ -4,9 +4,9 @@ export interface Module {
   description: string;
   color: string;
 
-  question?: string;
-  overview?: string;
-  warningSigns?: string[];
-  example?: string;
-  preventionTips?: string[];
+  question: string;
+  overview: string;
+  warningSigns: string[];
+  example: string;
+  preventionTips: string[];
 }
