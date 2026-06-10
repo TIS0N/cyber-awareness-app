@@ -34,7 +34,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
         </p>
       </div>
 
-      <QuizClient questions={questions} />
+      <QuizClient questions={questions} moduleId={moduleId} />
     </div>
   );
 }

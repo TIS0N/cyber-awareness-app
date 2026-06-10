@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { QuizQuestion } from "../../types/quiz";
+import { saveQuizResult } from "../../services/progressService";
 
 interface QuizClientProps {
   questions: QuizQuestion[];
+  moduleId: string;
 }
 
-export default function QuizClient({ questions }: QuizClientProps) {
+export default function QuizClient({ questions, moduleId }: QuizClientProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [score, setScore] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
   if (questions.length === 0) {
@@ -28,18 +30,24 @@ export default function QuizClient({ questions }: QuizClientProps) {
   const currentQuestion = questions[currentIndex];
   const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
 
+  const finalScore = selectedAnswers.filter(
+    (answer, index) => answer === questions[index].correctAnswer,
+  ).length;
+
   function handleAnswer(answer: string) {
     if (selectedAnswer) return;
 
     setSelectedAnswer(answer);
-
-    if (answer === currentQuestion.correctAnswer) {
-      setScore((previousScore) => previousScore + 1);
-    }
+    setSelectedAnswers((previousAnswers) => [...previousAnswers, answer]);
   }
 
   function handleNextQuestion() {
     if (currentIndex + 1 === questions.length) {
+      const calculatedFinalScore = selectedAnswers.filter(
+        (answer, index) => answer === questions[index].correctAnswer,
+      ).length;
+
+      saveQuizResult(moduleId, calculatedFinalScore, questions.length);
       setIsFinished(true);
       return;
     }
@@ -58,7 +66,7 @@ export default function QuizClient({ questions }: QuizClientProps) {
         <p className="text-lg text-slate-700">
           Your score:{" "}
           <span className="font-bold">
-            {score} / {questions.length}
+            {finalScore} / {questions.length}
           </span>
         </p>
 

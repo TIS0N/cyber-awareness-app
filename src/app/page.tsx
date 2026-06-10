@@ -1,3 +1,4 @@
+/*
 import ModuleCard from "../components/modules/ModuleCard";
 import { modules } from "../data/modules";
 
@@ -36,4 +37,11 @@ export default function HomePage() {
       </section>
     </div>
   );
+}
+*/
+
+import HomeWrapper from "../components/home/HomeWrapper";
+
+export default function HomePage() {
+  return <HomeWrapper />;
 }
