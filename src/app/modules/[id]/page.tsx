@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { modules } from "../../../data/modules";
 import { notFound } from "next/navigation";
+import { scenarios } from "../../../data/scenarios";
+import ScenarioCard from "../../../components/scenarios/ScenarioCard";
 
 interface ModulePageProps {
   params: Promise<{
@@ -12,6 +14,8 @@ export default async function ModulePage({ params }: ModulePageProps) {
   const { id } = await params;
 
   const module1 = modules.find((m) => m.id === id);
+
+  const moduleScenario = scenarios.find((scenario) => scenario.moduleId === id);
 
   if (!module1) {
     notFound();
@@ -79,6 +83,8 @@ export default async function ModulePage({ params }: ModulePageProps) {
           </ul>
         </section>
       )}
+
+      {moduleScenario && <ScenarioCard scenario={moduleScenario} />}
 
       <section className="mt-10 flex justify-end">
         <Link
