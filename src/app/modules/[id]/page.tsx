@@ -23,6 +23,12 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
+      <Link
+        href="/modules"
+        className="mb-6 inline-flex text-sm font-medium text-blue-700 hover:underline"
+      >
+        ← Back to modules
+      </Link>
       {/* Header */}
       <div className={`${module1.color} rounded-2xl p-8`}>
         <h1 className="mb-3 text-4xl font-bold text-slate-900">

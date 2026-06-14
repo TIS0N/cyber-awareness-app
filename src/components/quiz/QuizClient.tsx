@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { QuizQuestion } from "../../types/quiz";
 import { saveQuizResult } from "../../services/progressService";
@@ -74,6 +75,22 @@ export default function QuizClient({ questions, moduleId }: QuizClientProps) {
           Good work. Review the module again if you want to improve your
           understanding.
         </p>
+
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href={`/modules/${moduleId}`}
+            className="rounded-xl border border-slate-300 px-5 py-3 text-center font-medium text-slate-700 transition hover:bg-slate-50"
+          >
+            Review Module
+          </Link>
+
+          <Link
+            href="/progress"
+            className="rounded-xl bg-blue-600 px-5 py-3 text-center font-medium text-white transition hover:bg-blue-700"
+          >
+            View Progress
+          </Link>
+        </div>
       </section>
     );
   }

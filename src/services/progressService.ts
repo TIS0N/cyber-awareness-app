@@ -63,3 +63,17 @@ export function clearProgress(): void {
 
   localStorage.removeItem(STORAGE_KEY);
 }
+
+export function clearModuleProgress(moduleId: string): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const currentProgress = getProgress();
+
+  const updatedProgress = currentProgress.filter(
+    (item) => item.moduleId !== moduleId,
+  );
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedProgress));
+}

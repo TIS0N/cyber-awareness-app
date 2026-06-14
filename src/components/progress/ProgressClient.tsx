@@ -3,7 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { modules } from "../../data/modules";
-import { getProgress, clearProgress } from "../../services/progressService";
+import {
+  getProgress,
+  clearProgress,
+  clearModuleProgress,
+} from "../../services/progressService";
 import { ModuleProgress } from "../../types/progress";
 
 export default function ProgressClient() {
@@ -19,6 +23,14 @@ export default function ProgressClient() {
   function handleClearProgress() {
     clearProgress();
     setProgress([]);
+  }
+
+  function handleClearModuleProgress(moduleId: string) {
+    clearModuleProgress(moduleId);
+
+    setProgress((currentProgress) =>
+      currentProgress.filter((item) => item.moduleId !== moduleId),
+    );
   }
 
   function getModuleProgress(moduleId: string) {
@@ -82,12 +94,24 @@ export default function ProgressClient() {
                   )}
                 </div>
 
-                <Link
-                  href={`/modules/${module.id}`}
-                  className="rounded-xl bg-blue-600 px-5 py-3 text-center font-medium text-white transition hover:bg-blue-700"
-                >
-                  {isCompleted ? "Review Module" : "Start Module"}
-                </Link>
+                <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
+                  <Link
+                    href={`/modules/${module.id}`}
+                    className="rounded-xl bg-blue-600 px-5 py-3 text-center font-medium text-white transition hover:bg-blue-700"
+                  >
+                    {isCompleted ? "Review Module" : "Start Module"}
+                  </Link>
+
+                  {isCompleted && (
+                    <button
+                      type="button"
+                      onClick={() => handleClearModuleProgress(module.id)}
+                      className="rounded-xl border border-red-300 px-5 py-3 text-center font-medium text-red-700 transition hover:bg-red-50"
+                    >
+                      Reset Module
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           );
