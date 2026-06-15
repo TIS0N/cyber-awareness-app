@@ -1,140 +1,152 @@
 "use client";
 
 import { useState } from "react";
-import { Scenario } from "../../types/scenario";
+import { Scenario, ScenarioElement } from "../../types/scenario";
 
 interface ScenarioCardProps {
   scenario: Scenario;
 }
 
 export default function ScenarioCard({ scenario }: ScenarioCardProps) {
-  const [selectedHotspots, setSelectedHotspots] = useState<string[]>([]);
-  const [activeExplanation, setActiveExplanation] = useState<string | null>(
+  const [selectedElements, setSelectedElements] = useState<string[]>([]);
+  const [activeElement, setActiveElement] = useState<ScenarioElement | null>(
     null,
   );
 
-  function handleHotspotClick(id: string, explanation: string) {
-    if (!selectedHotspots.includes(id)) {
-      setSelectedHotspots((previous) => [...previous, id]);
+  const suspiciousElements = scenario.elements.filter(
+    (element) => element.isSuspicious,
+  );
+
+  const foundSuspiciousElements = scenario.elements.filter(
+    (element) => element.isSuspicious && selectedElements.includes(element.id),
+  );
+
+  const wrongSelections = scenario.elements.filter(
+    (element) => !element.isSuspicious && selectedElements.includes(element.id),
+  );
+
+  function handleElementClick(element: ScenarioElement) {
+    if (!selectedElements.includes(element.id)) {
+      setSelectedElements((previousElements) => [
+        ...previousElements,
+        element.id,
+      ]);
     }
 
-    setActiveExplanation(explanation);
+    setActiveElement(element);
   }
 
-  function getHotspotStyle(id: string) {
-    const wasSelected = selectedHotspots.includes(id);
+  function getElementStyle(element: ScenarioElement) {
+    const wasSelected = selectedElements.includes(element.id);
 
-    return `
-      cursor-pointer
-      rounded-lg
-      border
-      px-2
-      py-1
-      transition
-      ${
-        wasSelected
-          ? "border-red-400 bg-red-50 text-red-800"
-          : "border-transparent hover:border-yellow-400 hover:bg-yellow-50"
-      }
-    `;
+    if (!wasSelected) {
+      return "border-slate-200 bg-white hover:bg-slate-50";
+    }
+
+    if (element.isSuspicious) {
+      return "border-green-500 bg-green-50 text-green-900";
+    }
+
+    return "border-yellow-500 bg-yellow-50 text-yellow-900";
   }
 
-  const totalHotspots = 4;
+  function getScenarioLabel() {
+    switch (scenario.type) {
+      case "email":
+        return "Email message";
+      case "sms":
+        return "SMS / chat message";
+      case "website":
+        return "Website page";
+      case "download":
+        return "Download page";
+      case "shop":
+        return "Online offer";
+      default:
+        return "Scenario";
+    }
+  }
 
   return (
     <section className="mt-10 rounded-2xl bg-white p-8 shadow-sm">
       <div className="mb-6">
+        <p className="mb-2 text-sm font-medium text-blue-700">
+          Interactive scenario · {getScenarioLabel()}
+        </p>
+
         <h2 className="text-2xl font-bold text-slate-900">{scenario.title}</h2>
 
-        <p className="mt-2 text-slate-600">{scenario.description}</p>
+        <p className="mt-2 leading-7 text-slate-600">{scenario.description}</p>
+
+        <p className="mt-3 rounded-xl bg-blue-50 p-4 text-sm leading-6 text-blue-900">
+          {scenario.instruction}
+        </p>
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-        <div className="mb-4 border-b border-slate-200 pb-4">
-          <p className="text-sm text-slate-500">From:</p>
-          <button
-            type="button"
-            onClick={() =>
-              handleHotspotClick(
-                scenario.email.from.id,
-                scenario.email.from.explanation,
-              )
-            }
-            className={getHotspotStyle(scenario.email.from.id)}
-          >
-            {scenario.email.from.label}
-          </button>
-        </div>
-
-        <div className="mb-4 border-b border-slate-200 pb-4">
-          <p className="text-sm text-slate-500">Subject:</p>
-          <button
-            type="button"
-            onClick={() =>
-              handleHotspotClick(
-                scenario.email.subject.id,
-                scenario.email.subject.explanation,
-              )
-            }
-            className={getHotspotStyle(scenario.email.subject.id)}
-          >
-            {scenario.email.subject.label}
-          </button>
-        </div>
-
-        <div className="space-y-4 leading-7 text-slate-700">
-          <p>{scenario.email.greeting}</p>
-
-          <button
-            type="button"
-            onClick={() =>
-              handleHotspotClick(
-                scenario.email.body.id,
-                scenario.email.body.explanation,
-              )
-            }
-            className={`${getHotspotStyle(scenario.email.body.id)} text-left`}
-          >
-            {scenario.email.body.label}
-          </button>
-
-          <div>
+        <div className="grid gap-4">
+          {scenario.elements.map((element) => (
             <button
+              key={element.id}
               type="button"
-              onClick={() =>
-                handleHotspotClick(
-                  scenario.email.link.id,
-                  scenario.email.link.explanation,
-                )
-              }
-              className={`${getHotspotStyle(
-                scenario.email.link.id,
-              )} text-left text-blue-700 underline`}
+              onClick={() => handleElementClick(element)}
+              className={`rounded-xl border p-4 text-left transition ${getElementStyle(
+                element,
+              )}`}
             >
-              {scenario.email.link.label}
-            </button>
-          </div>
+              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {element.label}
+              </span>
 
-          <p className="whitespace-pre-line">{scenario.email.footer}</p>
+              <span className="mt-1 block leading-7">{element.content}</span>
+            </button>
+          ))}
         </div>
       </div>
 
       <div className="mt-6 rounded-xl bg-slate-100 p-5">
-        <p className="font-medium text-slate-900">
-          Found suspicious elements: {selectedHotspots.length} / {totalHotspots}
-        </p>
+        <div className="flex flex-col gap-2 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            Suspicious elements found:{" "}
+            <span className="font-bold">
+              {foundSuspiciousElements.length} / {suspiciousElements.length}
+            </span>
+          </p>
 
-        {activeExplanation ? (
-          <p className="mt-3 leading-7 text-slate-700">{activeExplanation}</p>
+          <p>
+            Wrong selections:{" "}
+            <span className="font-bold">{wrongSelections.length}</span>
+          </p>
+        </div>
+
+        {activeElement ? (
+          <div className="mt-4">
+            <p
+              className={`font-bold ${
+                activeElement.isSuspicious
+                  ? "text-green-700"
+                  : "text-yellow-700"
+              }`}
+            >
+              {activeElement.isSuspicious
+                ? "Good catch"
+                : "Not the strongest warning sign"}
+            </p>
+
+            <p className="mt-2 leading-7 text-slate-700">
+              {activeElement.explanation}
+            </p>
+          </div>
         ) : (
-          <p className="mt-3 text-slate-600">
-            Click on suspicious parts of the email to see explanations.
+          <p className="mt-4 leading-7 text-slate-600">
+            Click on the parts of the scenario that you think are suspicious.
           </p>
         )}
 
-        {selectedHotspots.length === totalHotspots && (
-          <p className="mt-4 font-medium text-green-700">
-            Great job. You identified all suspicious elements in this email.
+        {foundSuspiciousElements.length === suspiciousElements.length && (
+          <p className="mt-4 rounded-xl bg-green-50 p-4 font-medium text-green-800">
+            Great job. You found all important suspicious elements in this
+            scenario.
           </p>
         )}
       </div>

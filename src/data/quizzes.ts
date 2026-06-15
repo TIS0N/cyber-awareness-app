@@ -80,6 +80,23 @@ export const quizQuestions: QuizQuestion[] = [
     explanation:
       "The safest approach is to avoid links in suspicious messages and verify the issue through official websites or trusted contact methods.",
   },
+  {
+    id: "phishing-6",
+    moduleId: "phishing",
+    scenario:
+      "You receive an email that appears to be from your bank.\n\nSubject: Urgent account verification required\n\nThe email says your account will be locked within 24 hours unless you click a link and confirm your login details.",
+    question: "What is the safest action?",
+    options: [
+      "Click the link and log in quickly",
+      "Reply to the email with your password",
+      "Visit the bank website directly or contact the bank through official channels",
+      "Forward the email to friends",
+    ],
+    correctAnswer:
+      "Visit the bank website directly or contact the bank through official channels",
+    explanation:
+      "The message uses urgency and asks the user to act through a link. The safest action is to avoid the link and verify the issue through official bank channels.",
+},
 
   // PASSWORDS
   {
@@ -156,6 +173,23 @@ export const quizQuestions: QuizQuestion[] = [
     correctAnswer: "Creating and storing strong unique passwords",
     explanation:
       "A password manager can help users create and store strong unique passwords without needing to remember every password manually.",
+  },
+  {
+    id: "passwords-6",
+    moduleId: "passwords",
+    scenario:
+      "You used the same password for an online shop, your email account, and social media. Later, the online shop announces that customer data was leaked.",
+    question: "Why is this dangerous?",
+    options: [
+      "Attackers may try the leaked password on your other accounts",
+      "The password becomes longer automatically",
+      "Your internet connection becomes unsafe",
+      "It only affects the online shop and nothing else",
+    ],
+    correctAnswer:
+      "Attackers may try the leaked password on your other accounts",
+    explanation:
+      "When passwords are reused, one leaked password can put multiple accounts at risk. This is why important accounts should use unique passwords.",
   },
 
   // MALWARE
@@ -235,6 +269,22 @@ export const quizQuestions: QuizQuestion[] = [
       "Close the page and use trusted security software if needed",
     explanation:
       "Fake security warnings often try to scare users into downloading malware or paying for fake support. Use trusted security tools instead.",
+  },
+  {
+    id: "malware-6",
+    moduleId: "malware",
+    scenario:
+      "You receive an email from an unknown sender. It says you have an unpaid invoice and includes a file named invoice.pdf.exe.",
+    question: "What is the safest action?",
+    options: [
+      "Open it to check what it is",
+      "Download it and send it to friends",
+      "Do not open it and delete or report the email",
+      "Rename the file before opening it",
+    ],
+    correctAnswer: "Do not open it and delete or report the email",
+    explanation:
+      "The file name is suspicious because it ends in .exe, which means it is a program, not a normal PDF. Unexpected attachments can contain malware.",
   },
 
   // SCAMS
@@ -316,5 +366,22 @@ export const quizQuestions: QuizQuestion[] = [
       "Check reviews, contact information, website quality, and payment safety",
     explanation:
       "Fake shops may look professional at first. Checking reviews, contact details, and payment options can help identify suspicious websites.",
+  },
+  {
+    id: "scams-6",
+    moduleId: "scams",
+    scenario:
+      "A website says you won a free smartphone. It asks you to enter your full name, address, phone number, and card details to pay a €2.99 delivery fee.",
+    question: "What should you think?",
+    options: [
+      "It is probably safe because the fee is small",
+      "It may be a scam trying to steal payment or personal information",
+      "It is safe if the page has a product image",
+      "You should pay quickly before the offer expires",
+    ],
+    correctAnswer:
+      "It may be a scam trying to steal payment or personal information",
+    explanation:
+      "Fake prize scams often ask for small payments or personal details. The goal may be to steal money, payment information, or personal data.",
   },
 ];

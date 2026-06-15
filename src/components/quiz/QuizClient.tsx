@@ -101,6 +101,18 @@ export default function QuizClient({ questions, moduleId }: QuizClientProps) {
         Question {currentIndex + 1} of {questions.length}
       </p>
 
+      {currentQuestion.scenario && (
+        <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-5">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Scenario
+          </p>
+
+          <p className="whitespace-pre-line leading-7 text-slate-700">
+            {currentQuestion.scenario}
+          </p>
+        </div>
+      )}
+
       <h2 className="mb-6 text-2xl font-bold text-slate-900">
         {currentQuestion.question}
       </h2>
