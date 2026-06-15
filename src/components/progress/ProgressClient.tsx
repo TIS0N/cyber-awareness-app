@@ -124,7 +124,7 @@ export default function ProgressClient() {
             onClick={handleClearProgress}
             className="rounded-xl border border-red-300 px-5 py-3 font-medium text-red-700 transition hover:bg-red-50"
           >
-            Reset Progress
+            Reset All Progress
           </button>
         </section>
       )}
