@@ -5,18 +5,19 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "phishing-1",
     moduleId: "phishing",
-    question:
-      "You receive an email saying your bank account will be locked unless you click a link immediately. What should you do?",
+    scenario:
+      "You receive an email that appears to be from your bank.\n\nSubject: Urgent account verification required\n\nThe email says your account will be locked within 24 hours unless you click a link and confirm your login details.",
+    question: "What is the safest action?",
     options: [
-      "Click the link immediately",
-      "Reply with your password",
+      "Click the link and log in quickly",
+      "Reply to the email with your password",
       "Visit the bank website directly or contact the bank through official channels",
       "Forward the email to friends",
     ],
     correctAnswer:
       "Visit the bank website directly or contact the bank through official channels",
     explanation:
-      "Phishing messages often use urgency to make users act quickly. The safest action is to avoid the link and verify the message through official channels.",
+      "The message uses urgency and asks the user to act through a link. The safest action is to avoid the link and verify the issue through official bank channels.",
   },
   {
     id: "phishing-2",
@@ -35,8 +36,9 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "phishing-3",
     moduleId: "phishing",
-    question:
-      "An email says it is from PayPal, but the sender address is security@paypaI-verification.com. What is suspicious?",
+    scenario:
+      "An email says it is from PayPal. The sender address is security@paypaI-verification.com.\n\nAt first glance it looks normal, but the word PayPal is not written correctly in the domain.",
+    question: "What is suspicious?",
     options: [
       "The email has a sender address",
       "The sender address looks like PayPal but is not the official domain",
@@ -51,18 +53,19 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "phishing-4",
     moduleId: "phishing",
-    question:
-      "Why is it risky to click links in unexpected emails?",
+    scenario:
+      "You receive a message from a delivery company saying your package is delayed. It includes a link where you must enter your address and card number to pay a small fee.",
+    question: "Why is clicking the link risky?",
     options: [
-      "They always make the computer slower",
-      "They may lead to fake websites that steal login details",
-      "They always delete your files",
-      "They are always safe if they look professional",
+      "It may lead to a fake website that steals personal or payment details",
+      "It will always make the computer slower",
+      "It automatically deletes your files",
+      "It is always safe if the delivery company logo is shown",
     ],
     correctAnswer:
-      "They may lead to fake websites that steal login details",
+      "It may lead to a fake website that steals personal or payment details",
     explanation:
-      "Phishing links often lead to fake login pages designed to steal usernames, passwords, or payment information.",
+      "Phishing links often lead to fake websites designed to steal login details, payment information, or personal data.",
   },
   {
     id: "phishing-5",
@@ -80,23 +83,6 @@ export const quizQuestions: QuizQuestion[] = [
     explanation:
       "The safest approach is to avoid links in suspicious messages and verify the issue through official websites or trusted contact methods.",
   },
-  {
-    id: "phishing-6",
-    moduleId: "phishing",
-    scenario:
-      "You receive an email that appears to be from your bank.\n\nSubject: Urgent account verification required\n\nThe email says your account will be locked within 24 hours unless you click a link and confirm your login details.",
-    question: "What is the safest action?",
-    options: [
-      "Click the link and log in quickly",
-      "Reply to the email with your password",
-      "Visit the bank website directly or contact the bank through official channels",
-      "Forward the email to friends",
-    ],
-    correctAnswer:
-      "Visit the bank website directly or contact the bank through official channels",
-    explanation:
-      "The message uses urgency and asks the user to act through a link. The safest action is to avoid the link and verify the issue through official bank channels.",
-},
 
   // PASSWORDS
   {
@@ -116,67 +102,6 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "passwords-2",
     moduleId: "passwords",
-    question:
-      "Why is reusing the same password on multiple websites dangerous?",
-    options: [
-      "It makes passwords harder to remember",
-      "If one website is hacked, attackers may try the same password elsewhere",
-      "It makes websites load slower",
-      "It prevents multi-factor authentication",
-    ],
-    correctAnswer:
-      "If one website is hacked, attackers may try the same password elsewhere",
-    explanation:
-      "Attackers often test leaked passwords on other services. This is why every important account should have a unique password.",
-  },
-  {
-    id: "passwords-3",
-    moduleId: "passwords",
-    question:
-      "Which of these is the strongest password example?",
-    options: [
-      "adam123",
-      "password2024",
-      "Summer!",
-      "River-Cloud-Train-92!",
-    ],
-    correctAnswer: "River-Cloud-Train-92!",
-    explanation:
-      "Longer passwords or passphrases are usually harder to guess. A strong password should not be based on obvious personal information.",
-  },
-  {
-    id: "passwords-4",
-    moduleId: "passwords",
-    question:
-      "What does multi-factor authentication help protect against?",
-    options: [
-      "Only slow internet",
-      "Someone logging in with only a stolen password",
-      "Screen brightness problems",
-      "Deleted browser history",
-    ],
-    correctAnswer: "Someone logging in with only a stolen password",
-    explanation:
-      "Multi-factor authentication adds another verification step, so a stolen password alone may not be enough to access an account.",
-  },
-  {
-    id: "passwords-5",
-    moduleId: "passwords",
-    question:
-      "What is a password manager useful for?",
-    options: [
-      "Creating and storing strong unique passwords",
-      "Making all passwords public",
-      "Removing the need for account security",
-      "Sharing passwords with strangers",
-    ],
-    correctAnswer: "Creating and storing strong unique passwords",
-    explanation:
-      "A password manager can help users create and store strong unique passwords without needing to remember every password manually.",
-  },
-  {
-    id: "passwords-6",
-    moduleId: "passwords",
     scenario:
       "You used the same password for an online shop, your email account, and social media. Later, the online shop announces that customer data was leaked.",
     question: "Why is this dangerous?",
@@ -191,13 +116,61 @@ export const quizQuestions: QuizQuestion[] = [
     explanation:
       "When passwords are reused, one leaked password can put multiple accounts at risk. This is why important accounts should use unique passwords.",
   },
+  {
+    id: "passwords-3",
+    moduleId: "passwords",
+    question: "Which of these is the strongest password example?",
+    options: [
+      "adam123",
+      "password2024",
+      "Summer!",
+      "River-Cloud-Train-92!",
+    ],
+    correctAnswer: "River-Cloud-Train-92!",
+    explanation:
+      "Longer passwords or passphrases are usually harder to guess. A strong password should not be based on obvious personal information.",
+  },
+  {
+    id: "passwords-4",
+    moduleId: "passwords",
+    scenario:
+      "You log in to your email account from a new device. After entering your password, the service asks you to confirm a code from your phone.",
+    question: "What is this extra code helping protect against?",
+    options: [
+      "Only slow internet",
+      "Someone logging in with only a stolen password",
+      "Screen brightness problems",
+      "Deleted browser history",
+    ],
+    correctAnswer: "Someone logging in with only a stolen password",
+    explanation:
+      "Multi-factor authentication adds another verification step, so a stolen password alone may not be enough to access an account.",
+  },
+  {
+    id: "passwords-5",
+    moduleId: "passwords",
+    scenario:
+      "You have many online accounts and struggle to remember different passwords. You consider saving all passwords in a text file on your desktop.",
+    question: "What would be a safer option?",
+    options: [
+      "Use a password manager to create and store strong unique passwords",
+      "Make all passwords public",
+      "Use the same password everywhere",
+      "Send the passwords to yourself by email",
+    ],
+    correctAnswer:
+      "Use a password manager to create and store strong unique passwords",
+    explanation:
+      "A password manager can help users create and store strong unique passwords without needing to remember every password manually.",
+  },
 
   // MALWARE
   {
     id: "malware-1",
     moduleId: "malware",
-    question:
-      "You receive an unexpected email attachment from an unknown sender. What is the safest action?",
+    scenario:
+      "You receive an email from an unknown sender. It says you have an unpaid invoice and includes a file named invoice.pdf.exe.",
+    question: "What is the safest action?",
     options: [
       "Open it to check what it is",
       "Download it and send it to friends",
@@ -206,7 +179,7 @@ export const quizQuestions: QuizQuestion[] = [
     ],
     correctAnswer: "Do not open it and delete or report the email",
     explanation:
-      "Unexpected attachments can contain malware. Opening them may infect your device or steal information.",
+      "The file name is suspicious because it ends in .exe, which means it is a program, not a normal PDF. Unexpected attachments can contain malware.",
   },
   {
     id: "malware-2",
@@ -226,26 +199,28 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "malware-3",
     moduleId: "malware",
-    question:
-      "Which behavior increases the risk of malware infection?",
+    scenario:
+      "A website offers a free version of an expensive program. It asks you to disable antivirus protection before installing the file.",
+    question: "What is the main risk?",
     options: [
-      "Updating your operating system",
-      "Downloading software only from official websites",
-      "Opening unknown attachments",
-      "Using antivirus protection",
+      "The program may contain malware",
+      "The website will make your screen brighter",
+      "The program will always be faster",
+      "Disabling antivirus makes the computer cleaner",
     ],
-    correctAnswer: "Opening unknown attachments",
+    correctAnswer: "The program may contain malware",
     explanation:
-      "Unknown attachments are a common way malware spreads. Users should be careful with unexpected files, especially from unknown senders.",
+      "Pirated or suspicious software downloads are a common way malware spreads. Asking users to disable protection is a serious warning sign.",
   },
   {
     id: "malware-4",
     moduleId: "malware",
-    question:
-      "Why are regular backups important against ransomware?",
+    scenario:
+      "Your files suddenly become locked. A message appears saying you must pay money to recover them.",
+    question: "Why are regular backups important in this situation?",
     options: [
-      "They make passwords shorter",
       "They allow users to recover files without paying attackers",
+      "They make passwords shorter",
       "They prevent all phishing messages",
       "They hide websites from attackers",
     ],
@@ -257,8 +232,9 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "malware-5",
     moduleId: "malware",
-    question:
-      "A website shows a pop-up saying your device is infected and you must download a tool immediately. What should you do?",
+    scenario:
+      "A website shows a pop-up saying your device is infected. It tells you to download a security tool immediately.",
+    question: "What should you do?",
     options: [
       "Download the tool immediately",
       "Enter your bank details",
@@ -270,39 +246,24 @@ export const quizQuestions: QuizQuestion[] = [
     explanation:
       "Fake security warnings often try to scare users into downloading malware or paying for fake support. Use trusted security tools instead.",
   },
-  {
-    id: "malware-6",
-    moduleId: "malware",
-    scenario:
-      "You receive an email from an unknown sender. It says you have an unpaid invoice and includes a file named invoice.pdf.exe.",
-    question: "What is the safest action?",
-    options: [
-      "Open it to check what it is",
-      "Download it and send it to friends",
-      "Do not open it and delete or report the email",
-      "Rename the file before opening it",
-    ],
-    correctAnswer: "Do not open it and delete or report the email",
-    explanation:
-      "The file name is suspicious because it ends in .exe, which means it is a program, not a normal PDF. Unexpected attachments can contain malware.",
-  },
 
   // SCAMS
   {
     id: "scams-1",
     moduleId: "scams",
-    question:
-      "A message says you won a free phone but must pay a small fee first. What should you think?",
+    scenario:
+      "A website says you won a free smartphone. It asks you to enter your full name, address, phone number, and card details to pay a €2.99 delivery fee.",
+    question: "What should you think?",
     options: [
       "It is probably safe because the fee is small",
-      "It may be a scam trying to steal payment information",
-      "It is safe if the message has emojis",
+      "It may be a scam trying to steal payment or personal information",
+      "It is safe if the page has a product image",
       "You should pay quickly before the offer expires",
     ],
     correctAnswer:
-      "It may be a scam trying to steal payment information",
+      "It may be a scam trying to steal payment or personal information",
     explanation:
-      "Scammers often use fake prizes to make people pay fees or reveal payment details.",
+      "Fake prize scams often ask for small payments or personal details. The goal may be to steal money, payment information, or personal data.",
   },
   {
     id: "scams-2",
@@ -323,8 +284,9 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "scams-3",
     moduleId: "scams",
-    question:
-      "A stranger online says they need money urgently and asks you not to tell anyone. What is the safest response?",
+    scenario:
+      "A stranger contacts you on social media. They say they are in an emergency and need money urgently. They ask you not to tell anyone.",
+    question: "What is the safest response?",
     options: [
       "Send money immediately",
       "Keep it secret because they asked",
@@ -339,23 +301,25 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "scams-4",
     moduleId: "scams",
-    question:
-      "What does 'too good to be true' usually mean online?",
+    scenario:
+      "You see an investment advertisement promising guaranteed high profit with no risk. It says only the first 100 people can join today.",
+    question: "What does this suggest?",
     options: [
-      "The offer is always safe",
       "The offer may be fake or misleading",
+      "The offer is always safe",
       "The offer must be from the government",
       "The offer should be accepted quickly",
     ],
     correctAnswer: "The offer may be fake or misleading",
     explanation:
-      "Scams often use unrealistic rewards, discounts, or investment promises to attract victims.",
+      "Scams often use unrealistic rewards, guaranteed returns, and pressure to attract victims.",
   },
   {
     id: "scams-5",
     moduleId: "scams",
-    question:
-      "Before buying from an unknown online shop, what should you do?",
+    scenario:
+      "You find an online shop selling expensive electronics at extremely low prices. The website has no clear contact information and only accepts bank transfer.",
+    question: "What should you do before buying?",
     options: [
       "Buy immediately if the price is low",
       "Check reviews, contact information, website quality, and payment safety",
@@ -366,22 +330,5 @@ export const quizQuestions: QuizQuestion[] = [
       "Check reviews, contact information, website quality, and payment safety",
     explanation:
       "Fake shops may look professional at first. Checking reviews, contact details, and payment options can help identify suspicious websites.",
-  },
-  {
-    id: "scams-6",
-    moduleId: "scams",
-    scenario:
-      "A website says you won a free smartphone. It asks you to enter your full name, address, phone number, and card details to pay a €2.99 delivery fee.",
-    question: "What should you think?",
-    options: [
-      "It is probably safe because the fee is small",
-      "It may be a scam trying to steal payment or personal information",
-      "It is safe if the page has a product image",
-      "You should pay quickly before the offer expires",
-    ],
-    correctAnswer:
-      "It may be a scam trying to steal payment or personal information",
-    explanation:
-      "Fake prize scams often ask for small payments or personal details. The goal may be to steal money, payment information, or personal data.",
   },
 ];
