@@ -9,16 +9,33 @@ import {
   clearModuleProgress,
 } from "../../services/progressService";
 import { ModuleProgress } from "../../types/progress";
+import CompletionBadge from "./CompletionBadge";
 
 export default function ProgressClient() {
   const [progress, setProgress] = useState<ModuleProgress[]>(() =>
     getProgress(),
   );
 
-  const completedModules = progress.length;
+  const completedProgressItems = progress.filter((item) => item.completed);
+
+  const completedModules = completedProgressItems.length;
   const totalModules = modules.length;
+
   const completionPercentage =
     totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+
+  const totalScore = completedProgressItems.reduce(
+    (sum, item) => sum + item.score,
+    0,
+  );
+
+  const totalQuestions = completedProgressItems.reduce(
+    (sum, item) => sum + item.totalQuestions,
+    0,
+  );
+
+  const averageScore =
+    totalQuestions > 0 ? Math.round((totalScore / totalQuestions) * 100) : null;
 
   function handleClearProgress() {
     clearProgress();
@@ -56,7 +73,7 @@ export default function ProgressClient() {
 
           <div className="h-3 rounded-full bg-slate-200">
             <div
-              className="h-3 rounded-full bg-blue-600"
+              className="h-3 rounded-full bg-blue-600 transition-all"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
@@ -67,10 +84,16 @@ export default function ProgressClient() {
         </div>
       </section>
 
+      <CompletionBadge
+        completedCount={completedModules}
+        totalModules={totalModules}
+        averageScore={averageScore}
+      />
+
       <section className="mt-8 grid gap-5">
         {modules.map((module) => {
           const moduleProgress = getModuleProgress(module.id);
-          const isCompleted = Boolean(moduleProgress);
+          const isCompleted = Boolean(moduleProgress?.completed);
 
           return (
             <div key={module.id} className="rounded-2xl bg-white p-6 shadow-sm">
@@ -121,6 +144,7 @@ export default function ProgressClient() {
       {progress.length > 0 && (
         <section className="mt-8 flex justify-end">
           <button
+            type="button"
             onClick={handleClearProgress}
             className="rounded-xl border border-red-300 px-5 py-3 font-medium text-red-700 transition hover:bg-red-50"
           >
