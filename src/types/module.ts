@@ -4,6 +4,9 @@ export interface Module {
   description: string;
   color: string;
 
+  estimatedTime: string;
+  difficulty: "Beginner" | "Intermediate";
+
   question: string;
   overview: string;
   warningSigns: string[];

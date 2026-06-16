@@ -4,7 +4,10 @@ export const modules: Module[] = [
   {
     id: "phishing",
     title: "Phishing & Fake Messages",
-    color: "bg-red-100",
+    color: "border-red-300 bg-white",
+
+    estimatedTime: "6 min",
+    difficulty: "Beginner",
 
     description:
       "Learn how attackers use fake emails, messages, and websites to steal sensitive information.",
@@ -41,7 +44,10 @@ export const modules: Module[] = [
   {
     id: "passwords",
     title: "Passwords & Account Protection",
-    color: "bg-green-100",
+    color: "border-green-300 bg-white",
+
+    estimatedTime: "5 min",
+    difficulty: "Beginner",
 
     description:
       "Learn how to create strong passwords and protect your online accounts from unauthorized access.",
@@ -78,7 +84,10 @@ export const modules: Module[] = [
   {
     id: "malware",
     title: "Malware & Ransomware",
-    color: "bg-yellow-100",
+    color: "border-amber-300 bg-white",
+
+    estimatedTime: "6 min",
+    difficulty: "Beginner",
 
     description:
       "Learn how harmful software can infect devices, steal data, or lock files for ransom.",
@@ -115,7 +124,10 @@ export const modules: Module[] = [
   {
     id: "scams",
     title: "Online Scams & Fraud",
-    color: "bg-blue-100",
+    color: "border-blue-300 bg-white",
+
+    estimatedTime: "7 min",
+    difficulty: "Beginner",
 
     description:
       "Recognize common online scams and learn how scammers manipulate people into sending money or sharing information.",
