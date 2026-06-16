@@ -8,6 +8,7 @@ import {
   BookOpen,
   CheckCircle2,
   Clock,
+  Gem,
   GraduationCap,
   PlayCircle,
   ShieldCheck,
@@ -17,6 +18,8 @@ import {
 import { modules } from "../../data/modules";
 import ModuleCard from "../../components/modules/ModuleCard";
 import { getProgress } from "../../services/progressService";
+
+const REQUIRED_BADGE_SCORE = 90;
 
 const moduleThemes: Record<
   string,
@@ -70,6 +73,13 @@ export default function HomeClient() {
 
   const averageScore =
     totalQuestions > 0 ? Math.round((totalScore / totalQuestions) * 100) : 0;
+
+  const hasEarnedBadge =
+    totalModules > 0 &&
+    completedCount === totalModules &&
+    averageScore >= REQUIRED_BADGE_SCORE;
+
+  const hasDiamondBadge = hasEarnedBadge && averageScore === 100;
 
   const nextModule =
     modules.find(
@@ -153,11 +163,70 @@ export default function HomeClient() {
                 </p>
               </div>
 
+              {hasEarnedBadge && (
+                <div
+                  className={`rounded-xl border p-4 ${
+                    hasDiamondBadge
+                      ? "border-cyan-200/40 bg-cyan-300/15"
+                      : "border-yellow-300/30 bg-yellow-400/15"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
+                        hasDiamondBadge
+                          ? "bg-cyan-200 text-cyan-950"
+                          : "bg-yellow-400 text-slate-950"
+                      }`}
+                    >
+                      {hasDiamondBadge ? (
+                        <Gem className="h-6 w-6" />
+                      ) : (
+                        <Trophy className="h-6 w-6" />
+                      )}
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-bold text-yellow-100">
+                        {hasDiamondBadge
+                          ? "Diamond badge earned"
+                          : "Badge earned"}
+                      </p>
+
+                      <p className="mt-1 text-lg font-bold text-white">
+                        {hasDiamondBadge
+                          ? "Perfect Cyber Awareness Mastery"
+                          : "Cyber Awareness Completed"}
+                      </p>
+
+                      <p className="mt-1 text-sm leading-6 text-slate-300">
+                        {hasDiamondBadge ? (
+                          <>
+                            You completed all modules with a perfect{" "}
+                            <span className="font-bold text-white">100%</span>{" "}
+                            score.
+                          </>
+                        ) : (
+                          <>
+                            You completed all modules with an average score of{" "}
+                            <span className="font-bold text-white">
+                              {averageScore}%
+                            </span>
+                            .
+                          </>
+                        )}
+                        .
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <Link
                 href="/progress"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/20"
               >
-                Open progress page
+                {hasEarnedBadge ? "View earned badge" : "Open progress page"}
                 <BarChart3 className="h-4 w-4" />
               </Link>
             </div>
