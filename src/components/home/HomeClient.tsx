@@ -44,6 +44,8 @@ export default function HomeClient() {
                 title={module.title}
                 description={module.description}
                 color={module.color}
+                estimatedTime={module.estimatedTime}
+                difficulty={module.difficulty}
                 completed={Boolean(moduleProgress)}
                 score={moduleProgress?.score}
                 totalQuestions={moduleProgress?.totalQuestions}

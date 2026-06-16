@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import { QuizQuestion } from "../../types/quiz";
 import { saveQuizResult } from "../../services/progressService";
 
@@ -35,6 +35,44 @@ export default function QuizClient({ questions, moduleId }: QuizClientProps) {
     (answer, index) => answer === questions[index].correctAnswer,
   ).length;
 
+  function getScoreFeedback(score: number, total: number) {
+    const percentage = (score / total) * 100;
+
+    if (percentage === 100) {
+      return {
+        title: "Excellent work",
+        message:
+          "You answered every question correctly. You have a strong understanding of this topic.",
+        style: "bg-green-50 text-green-800",
+      };
+    }
+
+    if (percentage >= 80) {
+      return {
+        title: "Very good result",
+        message:
+          "You understand most of the topic well. Review the explanations for the questions you missed.",
+        style: "bg-blue-50 text-blue-800",
+      };
+    }
+
+    if (percentage >= 60) {
+      return {
+        title: "Good start",
+        message:
+          "You understand some important ideas, but it would be useful to review the module again.",
+        style: "bg-yellow-50 text-yellow-800",
+      };
+    }
+
+    return {
+      title: "Review recommended",
+      message:
+        "This topic may need more practice. Read the module again and retake the quiz when you are ready.",
+      style: "bg-red-50 text-red-800",
+    };
+  }
+
   function handleAnswer(answer: string) {
     if (selectedAnswer) return;
 
@@ -57,7 +95,16 @@ export default function QuizClient({ questions, moduleId }: QuizClientProps) {
     setSelectedAnswer(null);
   }
 
+  function handleRetakeQuiz() {
+    setCurrentIndex(0);
+    setSelectedAnswer(null);
+    setSelectedAnswers([]);
+    setIsFinished(false);
+  }
+
   if (isFinished) {
+    const feedback = getScoreFeedback(finalScore, questions.length);
+
     return (
       <section className="mt-10 rounded-2xl bg-white p-8 shadow-sm">
         <h2 className="mb-4 text-3xl font-bold text-slate-900">
@@ -71,12 +118,21 @@ export default function QuizClient({ questions, moduleId }: QuizClientProps) {
           </span>
         </p>
 
-        <p className="mt-4 leading-7 text-slate-600">
-          Good work. Review the module again if you want to improve your
-          understanding.
-        </p>
+        <div className={`mt-6 rounded-xl p-5 ${feedback.style}`}>
+          <p className="font-bold">{feedback.title}</p>
+
+          <p className="mt-2 leading-7">{feedback.message}</p>
+        </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={handleRetakeQuiz}
+            className="rounded-xl bg-slate-900 px-5 py-3 text-center font-medium text-white transition hover:bg-slate-800"
+          >
+            Retake Quiz
+          </button>
+
           <Link
             href={`/modules/${moduleId}`}
             className="rounded-xl border border-slate-300 px-5 py-3 text-center font-medium text-slate-700 transition hover:bg-slate-50"
