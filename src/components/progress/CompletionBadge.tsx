@@ -18,8 +18,6 @@ export default function CompletionBadge({
   const hasRequiredScore =
     averageScore !== null && averageScore >= REQUIRED_SCORE;
 
-  const isBadgeUnlocked = allModulesCompleted && hasRequiredScore;
-
   const hasPerfectScore = averageScore === 100;
 
   if (!allModulesCompleted) {
