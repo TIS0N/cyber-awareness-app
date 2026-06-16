@@ -40,7 +40,7 @@ export default function ScenarioCard({ scenario }: ScenarioCardProps) {
     const wasSelected = selectedElements.includes(element.id);
 
     if (!wasSelected) {
-      return "border-slate-200 bg-white hover:bg-slate-50";
+      return "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50";
     }
 
     if (element.isSuspicious) {
@@ -48,6 +48,167 @@ export default function ScenarioCard({ scenario }: ScenarioCardProps) {
     }
 
     return "border-yellow-500 bg-yellow-50 text-yellow-900";
+  }
+
+  function ClickableElement({
+    element,
+    compact = false,
+  }: {
+    element: ScenarioElement;
+    compact?: boolean;
+  }) {
+    return (
+      <button
+        type="button"
+        onClick={() => handleElementClick(element)}
+        className={`w-full rounded-xl border text-left transition ${getElementStyle(
+          element,
+        )} ${compact ? "px-3 py-2" : "p-4"}`}
+      >
+        <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+          {element.label}
+        </span>
+
+        <span className="mt-1 block whitespace-pre-line leading-7">
+          {element.content}
+        </span>
+      </button>
+    );
+  }
+
+  function renderEmailScenario() {
+    return (
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="border-b border-slate-200 bg-slate-100 px-5 py-3">
+          <div className="flex gap-2">
+            <span className="h-3 w-3 rounded-full bg-red-400" />
+            <span className="h-3 w-3 rounded-full bg-yellow-400" />
+            <span className="h-3 w-3 rounded-full bg-green-400" />
+          </div>
+        </div>
+
+        <div className="space-y-4 p-6">
+          {scenario.elements.map((element, index) => (
+            <ClickableElement
+              key={element.id}
+              element={element}
+              compact={index < 2}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function renderWebsiteScenario() {
+    return (
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="border-b border-slate-200 bg-slate-100 p-4">
+          <div className="rounded-full bg-white px-4 py-2 text-sm text-slate-600 shadow-sm">
+            Website preview
+          </div>
+        </div>
+
+        <div className="space-y-5 p-6">
+          {scenario.elements.map((element, index) => {
+            if (index === 0) {
+              return (
+                <div key={element.id}>
+                  <p className="mb-2 text-sm font-medium text-slate-500">
+                    Address bar
+                  </p>
+                  <ClickableElement element={element} compact />
+                </div>
+              );
+            }
+
+            return <ClickableElement key={element.id} element={element} />;
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  function renderDownloadScenario() {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+        <div className="mx-auto max-w-2xl rounded-2xl bg-white p-6 shadow-sm">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-100 text-2xl">
+              📄
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-slate-900">
+                File Download
+              </h3>
+              <p className="text-sm text-slate-500">
+                Review the download details carefully.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {scenario.elements.map((element) => (
+              <ClickableElement key={element.id} element={element} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderShopScenario() {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="grid gap-6 md:grid-cols-[220px_1fr]">
+          <div className="flex h-56 items-center justify-center rounded-2xl bg-slate-100 text-6xl">
+            📱
+          </div>
+
+          <div className="space-y-4">
+            {scenario.elements.map((element) => (
+              <ClickableElement key={element.id} element={element} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderSmsScenario() {
+    return (
+      <div className="mx-auto max-w-md rounded-[2rem] border border-slate-300 bg-slate-900 p-4 shadow-sm">
+        <div className="rounded-[1.5rem] bg-white p-5">
+          <div className="mb-4 text-center text-sm font-medium text-slate-500">
+            SMS / Chat message
+          </div>
+
+          <div className="space-y-3">
+            {scenario.elements.map((element) => (
+              <ClickableElement key={element.id} element={element} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderScenarioContent() {
+    switch (scenario.type) {
+      case "email":
+        return renderEmailScenario();
+      case "website":
+        return renderWebsiteScenario();
+      case "download":
+        return renderDownloadScenario();
+      case "shop":
+        return renderShopScenario();
+      case "sms":
+        return renderSmsScenario();
+      default:
+        return renderEmailScenario();
+    }
   }
 
   function getScenarioLabel() {
@@ -83,26 +244,7 @@ export default function ScenarioCard({ scenario }: ScenarioCardProps) {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-        <div className="grid gap-4">
-          {scenario.elements.map((element) => (
-            <button
-              key={element.id}
-              type="button"
-              onClick={() => handleElementClick(element)}
-              className={`rounded-xl border p-4 text-left transition ${getElementStyle(
-                element,
-              )}`}
-            >
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {element.label}
-              </span>
-
-              <span className="mt-1 block leading-7">{element.content}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      {renderScenarioContent()}
 
       <div className="mt-6 rounded-xl bg-slate-100 p-5">
         <div className="flex flex-col gap-2 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between">
@@ -139,7 +281,8 @@ export default function ScenarioCard({ scenario }: ScenarioCardProps) {
           </div>
         ) : (
           <p className="mt-4 leading-7 text-slate-600">
-            Click on the parts of the scenario that you think are suspicious.
+            Click parts of the scenario that you think are suspicious. Some
+            parts are dangerous, while others are normal.
           </p>
         )}
 
