@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "../components/layout/Navbar";
+import AppNavigation from "../components/layout/AppNavigation";
 
 export const metadata: Metadata = {
   title: "CyberAware",
@@ -14,10 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white text-slate-900">
-        <Navbar />
+      <body className="bg-slate-50 text-slate-900">
+        <AppNavigation />
 
-        <main>{children}</main>
+        <main className="pb-28 md:ml-64 md:pb-0">{children}</main>
       </body>
     </html>
   );
