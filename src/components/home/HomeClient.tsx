@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import ModuleCard from "../../components/modules/ModuleCard";
 import { getModules } from "../../services/moduleService";
-import { getProgress } from "../../services/progressService";
+import { getUserProgress } from "../../services/supabaseProgressService";
 import { Module } from "../../types/module";
 import { ModuleProgress } from "../../types/progress";
 
@@ -62,10 +62,13 @@ export default function HomeClient() {
     async function loadHomeData() {
       setIsLoading(true);
 
-      const loadedModules = await getModules();
+      const [loadedModules, loadedProgress] = await Promise.all([
+        getModules(),
+        getUserProgress(),
+      ]);
 
       setModules(loadedModules);
-      setProgress(getProgress());
+      setProgress(loadedProgress);
       setIsLoading(false);
     }
 
@@ -473,7 +476,7 @@ export default function HomeClient() {
                 color={module.color}
                 estimatedTime={module.estimatedTime}
                 difficulty={module.difficulty}
-                completed={Boolean(moduleProgress)}
+                completed={Boolean(moduleProgress?.completed)}
                 score={moduleProgress?.score}
                 totalQuestions={moduleProgress?.totalQuestions}
               />
