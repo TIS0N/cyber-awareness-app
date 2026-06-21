@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BarChart3,
@@ -15,9 +15,11 @@ import {
   Target,
   Trophy,
 } from "lucide-react";
-import { modules } from "../../data/modules";
 import ModuleCard from "../../components/modules/ModuleCard";
+import { getModules } from "../../services/moduleService";
 import { getProgress } from "../../services/progressService";
+import { Module } from "../../types/module";
+import { ModuleProgress } from "../../types/progress";
 
 const REQUIRED_BADGE_SCORE = 90;
 
@@ -52,7 +54,23 @@ const moduleThemes: Record<
 };
 
 export default function HomeClient() {
-  const [progress] = useState(() => getProgress());
+  const [modules, setModules] = useState<Module[]>([]);
+  const [progress, setProgress] = useState<ModuleProgress[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadHomeData() {
+      setIsLoading(true);
+
+      const loadedModules = await getModules();
+
+      setModules(loadedModules);
+      setProgress(getProgress());
+      setIsLoading(false);
+    }
+
+    loadHomeData();
+  }, []);
 
   const completedModules = progress.filter((item) => item.completed);
   const completedCount = completedModules.length;
@@ -86,10 +104,51 @@ export default function HomeClient() {
       (module) => !completedModules.some((item) => item.moduleId === module.id),
     ) ?? modules[0];
 
-  const nextModuleTheme = moduleThemes[nextModule.id] ?? moduleThemes.phishing;
+  const nextModuleTheme = nextModule
+    ? (moduleThemes[nextModule.id] ?? moduleThemes.phishing)
+    : moduleThemes.phishing;
 
   function getModuleProgress(moduleId: string) {
     return progress.find((item) => item.moduleId === moduleId);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <section className="rounded-3xl bg-slate-900 p-8 text-white shadow-sm md:p-10">
+          <div className="h-8 w-48 animate-pulse rounded bg-white/20" />
+          <div className="mt-6 h-12 w-full max-w-3xl animate-pulse rounded bg-white/20" />
+          <div className="mt-4 h-6 w-full max-w-2xl animate-pulse rounded bg-white/20" />
+          <div className="mt-8 h-12 w-40 animate-pulse rounded-xl bg-white/20" />
+        </section>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {[1, 2, 3].map((item) => (
+            <div
+              key={item}
+              className="h-48 animate-pulse rounded-2xl bg-slate-200"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (modules.length === 0) {
+    return (
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <section className="rounded-2xl bg-white p-8 shadow-sm">
+          <h1 className="text-3xl font-bold text-slate-900">
+            No modules loaded
+          </h1>
+
+          <p className="mt-3 leading-7 text-red-600">
+            The homepage could not load modules from Supabase. Check the modules
+            table and Supabase connection.
+          </p>
+        </section>
+      </div>
+    );
   }
 
   return (
@@ -215,7 +274,6 @@ export default function HomeClient() {
                             .
                           </>
                         )}
-                        .
                       </p>
                     </div>
                   </div>
@@ -276,8 +334,8 @@ export default function HomeClient() {
           </h2>
 
           <p className="mt-2 leading-7 text-slate-600">
-            Quiz scores and completed modules are saved locally so users can see
-            their learning progress.
+            Quiz scores and completed modules are saved so users can see their
+            learning progress.
           </p>
         </div>
       </section>
