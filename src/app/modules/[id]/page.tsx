@@ -1,3 +1,5 @@
+{
+  /*}
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { modules } from "../../../data/modules";
@@ -58,7 +60,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
-      {/* Header */}
+       Header
       <div className={`${module1.color} rounded-2xl border bg-white p-6`}>
         <h1 className="mb-3 text-4xl font-bold text-slate-900">
           {module1.title}
@@ -81,7 +83,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
       <ModulePathIndicator moduleId={module1.id} />
 
-      {/* Main Explanation */}
       <section
         id="learn"
         className="mt-10 scroll-mt-8 rounded-2xl bg-white p-8 shadow-sm"
@@ -93,7 +94,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <p className="leading-8 text-slate-600">{module1.overview}</p>
       </section>
 
-      {/* Warning Signs */}
       {module1.warningSigns.length > 0 && (
         <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
           <h2 className="mb-4 text-2xl font-bold text-slate-900">
@@ -108,7 +108,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </section>
       )}
 
-      {/* Example */}
+  
       {module1.example && (
         <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
           <h2 className="mb-4 text-2xl font-bold text-slate-900">
@@ -119,7 +119,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </section>
       )}
 
-      {/* Prevention Tips */}
+  
       {module1.preventionTips.length > 0 && (
         <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
           <h2 className="mb-4 text-2xl font-bold text-slate-900">
@@ -134,7 +134,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </section>
       )}
 
-      {/* Interactive Scenarios */}
       {moduleScenarios.length > 0 && (
         <section id="practice" className="scroll-mt-8">
           {moduleScenarios.map((scenario) => (
@@ -143,7 +142,6 @@ export default async function ModulePage({ params }: ModulePageProps) {
         </section>
       )}
 
-      {/* Quiz */}
       <section
         id="quiz"
         className={`mt-10 scroll-mt-8 rounded-2xl border p-8 shadow-sm ${quizTheme.section}`}
@@ -170,16 +168,24 @@ export default async function ModulePage({ params }: ModulePageProps) {
           Start Quiz
         </Link>
       </section>
-      {/*}
-      <section id="quiz" className="mt-10 flex scroll-mt-8 justify-end">
-        <Link
-          href={`/quiz/${module1.id}`}
-          className="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
-        >
-          Start Quiz
-        </Link>
-      </section>
-{*/}
+
+
     </div>
   );
+}
+{*/
+}
+
+import ModuleDetailClient from "../../../components/modules/ModuleDetailClient";
+
+interface ModulePageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function ModulePage({ params }: ModulePageProps) {
+  const { id } = await params;
+
+  return <ModuleDetailClient moduleId={id} />;
 }
