@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, RotateCcw, XCircle } from "lucide-react";
 import { getQuizQuestionsByModuleId } from "../../services/quizService";
-import { saveQuizResult } from "../../services/progressService";
+import { saveUserQuizResult } from "../../services/supabaseProgressService";
 import { QuizQuestion } from "../../types/quiz";
 
 interface QuizClientProps {
@@ -63,6 +63,8 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [saveErrorMessage, setSaveErrorMessage] = useState("");
 
   useEffect(() => {
     async function loadQuizQuestions() {
@@ -102,13 +104,28 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
     ]);
   }
 
-  function handleNextQuestion() {
+  async function handleNextQuestion() {
     if (currentIndex === questions.length - 1) {
       const calculatedFinalScore = selectedAnswers.filter(
         (answer) => answer.isCorrect,
       ).length;
 
-      saveQuizResult(moduleId, calculatedFinalScore, questions.length);
+      const result = await saveUserQuizResult(
+        moduleId,
+        calculatedFinalScore,
+        questions.length,
+      );
+
+      if (result.success) {
+        setSaveMessage("Your quiz result was saved to your account.");
+        setSaveErrorMessage("");
+      } else {
+        setSaveMessage("");
+        setSaveErrorMessage(
+          result.error ?? "Your quiz result could not be saved.",
+        );
+      }
+
       setIsFinished(true);
       return;
     }
@@ -121,6 +138,8 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setSelectedAnswers([]);
+    setSaveMessage("");
+    setSaveErrorMessage("");
     setIsFinished(false);
   }
 
@@ -213,6 +232,18 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
             <p className="mt-2 leading-7">{feedback.message}</p>
           </div>
 
+          {saveMessage && (
+            <p className="mt-4 rounded-xl bg-green-50 p-3 text-sm font-medium text-green-700">
+              {saveMessage}
+            </p>
+          )}
+
+          {saveErrorMessage && (
+            <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">
+              {saveErrorMessage}
+            </p>
+          )}
+
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               type="button"
@@ -232,7 +263,7 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
 
             <Link
               href="/progress"
-              className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              className="rounded-xl bg-slate-700 px-5 py-3 font-medium text-white transition hover:bg-slate-600"
             >
               View Progress
             </Link>
