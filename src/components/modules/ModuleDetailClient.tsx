@@ -13,33 +13,58 @@ interface ModuleDetailClientProps {
   moduleId: string;
 }
 
-const quizThemes: Record<
+const moduleThemes: Record<
   string,
   {
-    section: string;
-    button: string;
-    label: string;
+    header: string;
+    title: string;
+    description: string;
+    pill: string;
+    backLink: string;
+    quizSection: string;
+    quizButton: string;
+    quizLabel: string;
   }
 > = {
   phishing: {
-    section: "border-red-200 bg-red-50",
-    button: "bg-red-600 text-white hover:bg-red-700",
-    label: "text-red-700",
+    header: "border-red-200 bg-red-50",
+    title: "text-red-950",
+    description: "text-red-900/80",
+    pill: "bg-white/80 text-red-900 ring-1 ring-red-200",
+    backLink: "text-blue-700 hover:text-blue-800",
+    quizSection: "border-red-200 bg-red-50",
+    quizButton: "bg-red-600 text-white hover:bg-red-700",
+    quizLabel: "text-red-700",
   },
   passwords: {
-    section: "border-green-200 bg-green-50",
-    button: "bg-green-600 text-white hover:bg-green-700",
-    label: "text-green-700",
+    header: "border-green-200 bg-green-50",
+    title: "text-green-950",
+    description: "text-green-900/80",
+    pill: "bg-white/80 text-green-900 ring-1 ring-green-200",
+    backLink: "text-blue-700 hover:text-blue-800",
+    quizSection: "border-green-200 bg-green-50",
+    quizButton: "bg-green-600 text-white hover:bg-green-700",
+    quizLabel: "text-green-700",
   },
   malware: {
-    section: "border-amber-200 bg-amber-50",
-    button: "bg-amber-500 text-slate-950 hover:bg-amber-600",
-    label: "text-amber-700",
+    header: "border-amber-200 bg-amber-50",
+    title: "text-amber-950",
+    description: "text-amber-900/80",
+    pill: "bg-white/80 text-amber-900 ring-1 ring-amber-200",
+    backLink: "text-blue-700 hover:text-blue-800",
+    quizSection: "border-amber-200 bg-amber-50",
+    quizButton: "bg-amber-500 text-slate-950 hover:bg-amber-600",
+    quizLabel: "text-amber-700",
   },
   scams: {
-    section: "border-blue-200 bg-blue-50",
-    button: "bg-blue-600 text-white hover:bg-blue-700",
-    label: "text-blue-700",
+    header: "border-blue-200 bg-blue-50",
+    title: "text-blue-950",
+    description: "text-blue-900/80",
+    pill: "bg-white/80 text-blue-900 ring-1 ring-blue-200",
+    backLink: "text-blue-700 hover:text-blue-800",
+    quizSection: "border-blue-200 bg-blue-50",
+    quizButton: "bg-blue-600 text-white hover:bg-blue-700",
+    quizLabel: "text-blue-700",
   },
 };
 
@@ -51,18 +76,28 @@ export default function ModuleDetailClient({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function loadModulePage() {
-      setIsLoading(true);
+    let isMounted = true;
 
-      const loadedModule = await getModuleById(moduleId);
-      const loadedScenarios = await getScenariosByModuleId(moduleId);
+    async function loadModulePage() {
+      const [loadedModule, loadedScenarios] = await Promise.all([
+        getModuleById(moduleId),
+        getScenariosByModuleId(moduleId),
+      ]);
+
+      if (!isMounted) {
+        return;
+      }
 
       setModule1(loadedModule ?? null);
       setScenarios(loadedScenarios);
       setIsLoading(false);
     }
 
-    loadModulePage();
+    void loadModulePage();
+
+    return () => {
+      isMounted = false;
+    };
   }, [moduleId]);
 
   if (isLoading) {
@@ -70,7 +105,7 @@ export default function ModuleDetailClient({
       <div className="mx-auto max-w-4xl px-6 py-12">
         <Link
           href="/modules"
-          className="mb-6 inline-flex text-sm font-medium text-blue-700 hover:underline"
+          className="mb-6 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800 hover:underline"
         >
           ← Back to modules
         </Link>
@@ -111,35 +146,46 @@ export default function ModuleDetailClient({
     );
   }
 
-  const quizTheme = quizThemes[module1.id] ?? quizThemes.phishing;
+  const theme = moduleThemes[module1.id] ?? {
+    header: `bg-white ${module1.color}`,
+    title: "text-slate-900",
+    description: "text-slate-700",
+    pill: "bg-slate-100 text-slate-700",
+    backLink: "text-blue-700 hover:text-blue-800",
+    quizSection: "border-blue-200 bg-blue-50",
+    quizButton: "bg-blue-600 text-white hover:bg-blue-700",
+    quizLabel: "text-blue-700",
+  };
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
       <Link
         href="/modules"
-        className="mb-6 inline-flex text-sm font-medium text-blue-700 hover:underline"
+        className={`mb-6 inline-flex text-sm font-medium hover:underline ${theme.backLink}`}
       >
         ← Back to modules
       </Link>
 
       {/* Header */}
-      <div
-        className={`rounded-2xl border-l-4 bg-white p-8 shadow-sm ${module1.color}`}
-      >
-        <h1 className="mb-3 text-4xl font-bold text-slate-900">
+      <div className={`rounded-2xl border p-8 shadow-sm ${theme.header}`}>
+        <h1 className={`mb-3 text-4xl font-bold ${theme.title}`}>
           {module1.title}
         </h1>
 
-        <p className="text-lg leading-8 text-slate-700">
+        <p className={`text-lg leading-8 ${theme.description}`}>
           {module1.description}
         </p>
 
         <div className="mt-5 flex flex-wrap gap-2">
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+          <span
+            className={`rounded-full px-3 py-1 text-sm font-medium ${theme.pill}`}
+          >
             Estimated time: {module1.estimatedTime}
           </span>
 
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+          <span
+            className={`rounded-full px-3 py-1 text-sm font-medium ${theme.pill}`}
+          >
             Difficulty: {module1.difficulty}
           </span>
         </div>
@@ -212,10 +258,10 @@ export default function ModuleDetailClient({
       {/* Quiz */}
       <section
         id="quiz"
-        className={`mt-10 scroll-mt-8 rounded-2xl border p-8 shadow-sm ${quizTheme.section}`}
+        className={`mt-10 scroll-mt-8 rounded-2xl border p-8 shadow-sm ${theme.quizSection}`}
       >
         <p
-          className={`mb-2 text-sm font-bold uppercase tracking-wide ${quizTheme.label}`}
+          className={`mb-2 text-sm font-bold uppercase tracking-wide ${theme.quizLabel}`}
         >
           Final step
         </p>
@@ -231,7 +277,7 @@ export default function ModuleDetailClient({
 
         <Link
           href={`/quiz/${module1.id}`}
-          className={`inline-flex w-full justify-center rounded-xl px-8 py-3 font-bold transition sm:w-auto ${quizTheme.button}`}
+          className={`inline-flex w-full justify-center rounded-xl px-8 py-3 font-bold transition sm:w-auto ${theme.quizButton}`}
         >
           Start Quiz
         </Link>
