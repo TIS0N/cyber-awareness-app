@@ -193,8 +193,8 @@ export default function ProgressClient() {
           </h1>
 
           <p className="mt-4 leading-7 text-slate-600">
-            Progress is now saved to your account using Supabase. Log in to see
-            completed modules, quiz scores, and earned badges across devices.
+            Log in or create an account to see your completed modules, quiz
+            scores, and earned badges across devices.
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

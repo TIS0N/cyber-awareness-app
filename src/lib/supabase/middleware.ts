@@ -31,7 +31,23 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const protectedRoutes = ["/progress"];
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
+
+  if (!user && isProtectedRoute) {
+    const redirectUrl = request.nextUrl.clone();
+
+    redirectUrl.pathname = "/login";
+    redirectUrl.searchParams.set("redirectedFrom", request.nextUrl.pathname);
+
+    return NextResponse.redirect(redirectUrl);
+  }
 
   return response;
 }
