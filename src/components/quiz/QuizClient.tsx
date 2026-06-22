@@ -263,7 +263,7 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
 
             <Link
               href="/progress"
-              className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              className="rounded-xl bg-slate-700 px-5 py-3 font-medium text-white transition hover:bg-slate-600"
             >
               View Progress
             </Link>
