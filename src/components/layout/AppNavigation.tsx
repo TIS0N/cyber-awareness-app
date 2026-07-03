@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
+  HelpCircle,
   Home,
   LogIn,
   LogOut,
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/modules", label: "Modules", icon: BookOpen },
   { href: "/progress", label: "Progress", icon: BarChart3 },
+  { href: "/help", label: "Help", icon: HelpCircle },
 ];
 
 export default function AppNavigation() {
@@ -130,7 +132,7 @@ export default function AppNavigation() {
       </aside>
 
       <nav className="fixed inset-x-0 bottom-0 z-[999] border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_12px_rgba(15,23,42,0.08)] md:hidden">
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -153,7 +155,7 @@ export default function AppNavigation() {
             <button
               type="button"
               onClick={handleLogout}
-              className="flex min-h-16 flex-col items-center justify-center gap-1 px-2 py-3 text-xs font-medium text-slate-600 transition"
+              className="flex min-h-16 flex-col items-center justify-center gap-1 px-2 py-3 text-xs font-medium text-red-700 transition"
             >
               <LogOut className="h-5 w-5" />
               Logout

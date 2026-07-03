@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { createClient } from "../../lib/supabase/client";
 
 export default function LoginPage() {
@@ -11,14 +11,66 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const visibleCharactersOnlyPattern = /^[\p{L}\p{M}\p{N}\p{P}\p{S}]+$/u;
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const allowedCharactersMessage =
+    "Only letters, numbers, and symbols are allowed. Spaces, tabs, and line breaks are not allowed.";
+
+  function validateVisibleCharacters(fieldName: string, value: string) {
+    if (value.length === 0) {
+      return `${fieldName} is required. ${allowedCharactersMessage}`;
+    }
+
+    if (!visibleCharactersOnlyPattern.test(value)) {
+      return `${fieldName}: ${allowedCharactersMessage}`;
+    }
+
+    return "";
+  }
+
+  function validateEmail(value: string) {
+    const visibleCharactersError = validateVisibleCharacters("Email", value);
+
+    if (visibleCharactersError) {
+      return visibleCharactersError;
+    }
+
+    if (!emailPattern.test(value)) {
+      return "Email must be a valid email address, for example you@example.com.";
+    }
+
+    return "";
+  }
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setIsLoading(true);
     setErrorMessage("");
+
+    const emailValidationError = validateEmail(email);
+
+    if (emailValidationError) {
+      setIsLoading(false);
+      setErrorMessage(emailValidationError);
+      return;
+    }
+
+    const passwordValidationError = validateVisibleCharacters(
+      "Password",
+      password,
+    );
+
+    if (passwordValidationError) {
+      setIsLoading(false);
+      setErrorMessage(passwordValidationError);
+      return;
+    }
 
     const supabase = createClient();
 
@@ -64,13 +116,13 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5" noValidate>
           <div>
             <label
               htmlFor="email"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Email
+              Email <span className="text-red-600">*</span>
             </label>
 
             <input
@@ -89,18 +141,33 @@ export default function LoginPage() {
               htmlFor="password"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Password
+              Password <span className="text-red-600">*</span>
             </label>
 
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              placeholder="Your password"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                placeholder="At least 6 characters"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((currentValue) => !currentValue)}
+                className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-slate-800"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
 
           {errorMessage && (
