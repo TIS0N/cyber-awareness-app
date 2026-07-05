@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { createClient } from "../../lib/supabase/client";
 
-export default function LoginPage() {
-  const router = useRouter();
-
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const visibleCharactersOnlyPattern = /^[\p{L}\p{M}\p{N}\p{P}\p{S}]+$/u;
@@ -47,11 +43,12 @@ export default function LoginPage() {
     return "";
   }
 
-  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+  async function handlePasswordReset(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setIsLoading(true);
     setErrorMessage("");
+    setSuccessMessage("");
 
     const emailValidationError = validateEmail(email);
 
@@ -61,22 +58,10 @@ export default function LoginPage() {
       return;
     }
 
-    const passwordValidationError = validateVisibleCharacters(
-      "Password",
-      password,
-    );
-
-    if (passwordValidationError) {
-      setIsLoading(false);
-      setErrorMessage(passwordValidationError);
-      return;
-    }
-
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
     });
 
     setIsLoading(false);
@@ -86,18 +71,10 @@ export default function LoginPage() {
       return;
     }
 
-    const searchParams = new URLSearchParams(window.location.search);
-    const redirectedFrom = searchParams.get("redirectedFrom");
-
-    const safeRedirectPath =
-      redirectedFrom &&
-      redirectedFrom.startsWith("/") &&
-      !redirectedFrom.startsWith("//")
-        ? redirectedFrom
-        : "/";
-
-    router.push(safeRedirectPath);
-    router.refresh();
+    setSuccessMessage(
+      "If an account with this email exists, a password reset link has been sent.",
+    );
+    setEmail("");
   }
 
   return (
@@ -109,14 +86,16 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Log in</h1>
+            <h1 className="text-3xl font-bold text-slate-900">
+              Forgot password
+            </h1>
             <p className="text-sm text-slate-500">
-              Continue your cybersecurity learning.
+              Enter your email and we will send you a password reset link.
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5" noValidate>
+        <form onSubmit={handlePasswordReset} className="space-y-5" noValidate>
           <div>
             <label
               htmlFor="email"
@@ -136,52 +115,15 @@ export default function LoginPage() {
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Password <span className="text-red-600">*</span>
-            </label>
-
-            <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                placeholder="At least 6 characters"
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword((currentValue) => !currentValue)}
-                className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-slate-800"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          <div className="text-right">
-            <Link
-              href="/forgot-password"
-              className="text-sm font-bold text-blue-700 hover:underline"
-            >
-              Forgot password?
-            </Link>
-          </div>
-
           {errorMessage && (
             <p className="rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">
               {errorMessage}
+            </p>
+          )}
+
+          {successMessage && (
+            <p className="rounded-xl bg-green-50 p-3 text-sm font-medium text-green-700">
+              {successMessage}
             </p>
           )}
 
@@ -190,17 +132,17 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            {isLoading ? "Logging in..." : "Log in"}
+            {isLoading ? "Sending reset link..." : "Send reset link"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-600">
-          Do not have an account?{" "}
+          Remembered your password?{" "}
           <Link
-            href="/register"
+            href="/login"
             className="font-bold text-blue-700 hover:underline"
           >
-            Create one
+            Log in
           </Link>
         </p>
       </section>
