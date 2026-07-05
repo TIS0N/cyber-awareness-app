@@ -17,6 +17,28 @@ interface SelectedAnswer {
   isCorrect: boolean;
 }
 
+function shuffleArray<T>(items: T[]) {
+  const shuffledItems = [...items];
+
+  for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+
+    [shuffledItems[index], shuffledItems[randomIndex]] = [
+      shuffledItems[randomIndex],
+      shuffledItems[index],
+    ];
+  }
+
+  return shuffledItems;
+}
+
+function shuffleQuestionOptions(question: QuizQuestion): QuizQuestion {
+  return {
+    ...question,
+    options: shuffleArray(question.options),
+  };
+}
+
 function getScoreFeedback(score: number, totalQuestions: number) {
   const percentage =
     totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
@@ -72,7 +94,7 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
 
       const loadedQuestions = await getQuizQuestionsByModuleId(moduleId);
 
-      setQuestions(loadedQuestions);
+      setQuestions(loadedQuestions.map(shuffleQuestionOptions));
       setIsLoading(false);
     }
 
@@ -135,6 +157,9 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
   }
 
   function handleRetakeQuiz() {
+    setQuestions((previousQuestions) =>
+      previousQuestions.map(shuffleQuestionOptions),
+    );
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setSelectedAnswers([]);

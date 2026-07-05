@@ -440,6 +440,13 @@ export default function ProgressClient() {
           {modules.map((module) => {
             const moduleProgress = getModuleProgress(module.id);
             const isCompleted = Boolean(moduleProgress?.completed);
+
+            const hasPerfectScore =
+              isCompleted &&
+              moduleProgress !== undefined &&
+              moduleProgress.score === moduleProgress.totalQuestions &&
+              moduleProgress.totalQuestions > 0;
+
             const scorePercentage =
               moduleProgress && moduleProgress.totalQuestions > 0
                 ? Math.round(
@@ -452,9 +459,11 @@ export default function ProgressClient() {
               <div
                 key={module.id}
                 className={`rounded-2xl border p-5 ${
-                  isCompleted
+                  hasPerfectScore
                     ? "border-green-200 bg-green-50"
-                    : "border-slate-200 bg-white"
+                    : isCompleted
+                      ? "border-blue-200 bg-blue-50"
+                      : "border-slate-200 bg-white"
                 }`}
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -462,9 +471,11 @@ export default function ProgressClient() {
                     <div className="flex items-center gap-3">
                       <div
                         className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                          isCompleted
-                            ? "bg-green-600 text-white"
-                            : "bg-slate-100 text-slate-500"
+                          hasPerfectScore
+                            ? "bg-amber-400 text-ashe"
+                            : isCompleted
+                              ? "bg-blue-600 text-white"
+                              : "bg-slate-100 text-slate-500"
                         }`}
                       >
                         {isCompleted ? (
