@@ -26,6 +26,8 @@ export default function AppNavigation() {
   const router = useRouter();
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -63,12 +65,43 @@ export default function AppNavigation() {
     return pathname.startsWith(href);
   }
 
+  function openLogoutModal() {
+    if (isLoggingOut) {
+      return;
+    }
+
+    setIsLogoutModalOpen(true);
+  }
+
+  function closeLogoutModal() {
+    if (isLoggingOut) {
+      return;
+    }
+
+    setIsLogoutModalOpen(false);
+  }
+
   async function handleLogout() {
+    if (isLoggingOut) {
+      return;
+    }
+
+    setIsLoggingOut(true);
+
     const supabase = createClient();
 
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Logout failed:", error.message);
+      setIsLoggingOut(false);
+      return;
+    }
 
     setUserEmail(null);
+    setIsLogoutModalOpen(false);
+    setIsLoggingOut(false);
+
     router.push("/login");
     router.refresh();
   }
@@ -112,8 +145,9 @@ export default function AppNavigation() {
 
               <button
                 type="button"
-                onClick={handleLogout}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-3 text-sm font-bold text-red-700 transition hover:bg-red-50"
+                onClick={openLogoutModal}
+                disabled={isLoggingOut}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-3 text-sm font-bold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <LogOut className="h-4 w-4" />
                 Log out
@@ -154,8 +188,9 @@ export default function AppNavigation() {
           {userEmail ? (
             <button
               type="button"
-              onClick={handleLogout}
-              className="flex min-h-16 flex-col items-center justify-center gap-1 px-2 py-3 text-xs font-medium text-red-700 transition"
+              onClick={openLogoutModal}
+              disabled={isLoggingOut}
+              className="flex min-h-16 flex-col items-center justify-center gap-1 px-2 py-3 text-xs font-medium text-red-700 transition disabled:cursor-not-allowed disabled:opacity-60"
             >
               <LogOut className="h-5 w-5" />
               Logout
@@ -176,6 +211,43 @@ export default function AppNavigation() {
           )}
         </div>
       </nav>
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/50 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <LogOut className="h-6 w-6 text-red-700" />
+            </div>
+
+            <h2 className="text-center text-lg font-bold text-slate-900">
+              Log out?
+            </h2>
+
+            <p className="mt-2 text-center text-sm text-slate-600">
+              Are you sure you want to log out of your CyberAware account?
+            </p>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={closeLogoutModal}
+                disabled={isLoggingOut}
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isLoggingOut ? "Logging out..." : "Log out"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
