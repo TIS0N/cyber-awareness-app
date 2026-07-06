@@ -152,7 +152,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                placeholder="At least 6 characters"
+                placeholder="At least 8 characters"
               />
 
               <button
