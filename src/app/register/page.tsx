@@ -49,6 +49,32 @@ export default function RegisterPage() {
     return "";
   }
 
+  function validateStrongPassword(value: string) {
+    const visibleCharactersError = validateVisibleCharacters("Password", value);
+
+    if (visibleCharactersError) {
+      return visibleCharactersError;
+    }
+
+    if (value.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+
+    if (!/[a-z]/.test(value)) {
+      return "Password must contain at least one lowercase letter.";
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      return "Password must contain at least one uppercase letter.";
+    }
+
+    if (!/[0-9]/.test(value)) {
+      return "Password must contain at least one number.";
+    }
+
+    return "";
+  }
+
   async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -76,6 +102,7 @@ export default function RegisterPage() {
     }
 
     const emailValidationError = validateEmail(email);
+    const passwordValidationError = validateStrongPassword(password);
 
     if (emailValidationError) {
       setIsLoading(false);
@@ -83,9 +110,9 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 6) {
+    if (passwordValidationError) {
       setIsLoading(false);
-      setErrorMessage("Password must be at least 6 characters long.");
+      setErrorMessage(passwordValidationError);
       return;
     }
 
@@ -196,9 +223,8 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                placeholder="At least 6 characters"
+                placeholder="At least 8 characters"
               />
-
               <button
                 type="button"
                 onClick={() => setShowPassword((currentValue) => !currentValue)}
@@ -212,6 +238,9 @@ export default function RegisterPage() {
                 )}
               </button>
             </div>
+            <p className="mt-2 text-xs text-slate-500">
+              Use at least 8 characters with uppercase, lowercase, and a number.
+            </p>
           </div>
 
           <div>
