@@ -261,7 +261,6 @@ export default function ProgressClient() {
 
           <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">
             Track completed modules, quiz results, and your CyberAware badge.
-            This progress is saved to your Supabase account.
           </p>
         </div>
       </div>
