@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, RotateCcw, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  LogIn,
+  RotateCcw,
+  UserPlus,
+  XCircle,
+} from "lucide-react";
+import { createClient } from "../../lib/supabase/client";
 import { getQuizQuestionsByModuleId } from "../../services/quizService";
 import { saveUserQuizResult } from "../../services/supabaseProgressService";
 import { QuizQuestion } from "../../types/quiz";
@@ -81,6 +88,8 @@ function getScoreFeedback(score: number, totalQuestions: number) {
 export default function QuizClient({ moduleId }: QuizClientProps) {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswer[]>([]);
@@ -100,6 +109,36 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
 
     loadQuizQuestions();
   }, [moduleId]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let isMounted = true;
+
+    async function checkUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (isMounted) {
+        setIsLoggedIn(Boolean(user));
+        setIsCheckingAuth(false);
+      }
+    }
+
+    checkUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(Boolean(session?.user));
+      setIsCheckingAuth(false);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const currentQuestion = questions[currentIndex];
 
@@ -263,7 +302,37 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
             </p>
           )}
 
-          {saveErrorMessage && (
+          {saveErrorMessage && !isLoggedIn && (
+            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-left text-amber-900">
+              <h2 className="font-bold">Result not saved</h2>
+
+              <p className="mt-2 text-sm leading-6">
+                Your quiz result was not saved because you are not logged in. To
+                save future quiz results and track your progress, please log in
+                or create an account before taking a quiz.
+              </p>
+
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href={`/login?redirectedFrom=/quiz/${moduleId}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Log in
+                </Link>
+
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-white px-4 py-3 text-sm font-bold text-amber-900 transition hover:bg-amber-100"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  Create account
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {saveErrorMessage && isLoggedIn && (
             <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">
               {saveErrorMessage}
             </p>
@@ -308,6 +377,36 @@ export default function QuizClient({ moduleId }: QuizClientProps) {
       </Link>
 
       <section className="rounded-2xl bg-white p-8 shadow-sm">
+        {!isCheckingAuth && !isLoggedIn && (
+          <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900">
+            <h2 className="font-bold">Progress will not be saved</h2>
+
+            <p className="mt-2 text-sm leading-6">
+              You can complete this quiz without an account, but your result
+              will not be saved. Log in or create an account before starting if
+              you want to save your progress.
+            </p>
+
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href={`/login?redirectedFrom=/quiz/${moduleId}`}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
+              >
+                <LogIn className="h-4 w-4" />
+                Log in
+              </Link>
+
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-white px-4 py-3 text-sm font-bold text-amber-900 transition hover:bg-amber-100"
+              >
+                <UserPlus className="h-4 w-4" />
+                Create account
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-slate-500">
