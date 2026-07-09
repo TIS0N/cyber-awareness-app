@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CyberAware – Educational Application for Safe Internet Use
 
-## Getting Started
+CyberAware is an educational web application created as the practical part of a bachelor thesis titled **Educational Application for Safe Internet Use**.
 
-First, run the development server:
+The application is designed for everyday internet users without professional cybersecurity knowledge. Its purpose is to explain common online threats in a simple and practical way through learning modules, interactive scenarios, quizzes, feedback, progress tracking, and basic gamification elements.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Live Application
+
+The deployed application is available here:
+
+https://cyber-awareness-app.vercel.app/
+
+## Main Features
+
+- Four cybersecurity learning modules:
+  - Phishing and Fake Messages
+  - Passwords and Account Protection
+  - Malware and Ransomware
+  - Online Scams and Fraud
+- Short educational explanations
+- Warning signs and prevention tips
+- Realistic interactive scenarios
+- Module-specific quizzes
+- Immediate answer feedback
+- User registration and login
+- Password reset functionality
+- Account-based progress saving
+- Progress page with quiz results and completion status
+- Badge system for completed learning progress
+- Help page with PDF user manual
+- Responsive design for desktop and mobile devices
+
+## Technologies Used
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- lucide-react
+- Supabase Authentication
+- Supabase PostgreSQL Database
+- Supabase Row Level Security
+- Vercel deployment
+
+## Project Structure
+
+```text
+src/
+├── app/                 # Next.js routes and pages
+├── components/          # Reusable React components
+├── lib/supabase/        # Supabase client and server utilities
+├── services/            # Data access and progress services
+├── types/               # TypeScript type definitions
+└── middleware.ts        # Route/session handling
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
